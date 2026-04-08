@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Аутентификация</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00B06C;
+            --primary-dark: #0e3b2c;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+        }
+
+        .login-container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px; /* Ширина формы */
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .logo-svg {
+            margin-bottom: 1.5rem;
+            width: 80px;
+            height: 80px;
+        }
+
+        /* Стилизация Django-формы */
+        form p {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        form input {
+            width: 100%;
+            padding: 12px 16px;
+            margin-top: 5px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        form input:focus {
+            border-color: var(--primary-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, box-shadow 0.3s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background-color: #008f58;
+            box-shadow: 0 5px 15px rgba(0, 176, 108, 0.3);
+        }
+
+        .message-box {
+            font-size: 0.9rem;
+            color: #d9534f;
+            margin-bottom: 1rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 20px;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        {% if not message %}
+            <form action="{% url 'login' %}?next=/home/" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Войти</button>
+            </form>
+        {% else %}
+            <div class="message-box">{{ message }}</div>
+            <a href="http://localhost:8000/" class="back-link">← Вернуться назад</a>
+        {% endif %}
+    </div>
+
+</body>
+</html>

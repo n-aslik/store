@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Склад</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0e3b2c;
+            --accent-color: #9CC9BA;
+            --bg-color: #f4f7f6;
+            --text-dark: #333;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #1a5c45);
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-section img {
+            height: 45px;
+            filter: brightness(0) invert(1); /* Делаем лого белым, если оно темное */
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .btn-nav {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-nav:hover {
+            background: var(--white);
+            color: var(--primary-color);
+        }
+
+        /* --- Search & User Profile --- */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            background: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 5px;
+        }
+
+        .user-profile {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            color: #333;
+            min-width: 200px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            z-index: 100;
+            padding: 10px;
+        }
+
+        .user-profile:hover .user-dropdown { display: block; }
+
+        /* --- Main Content (Form) --- */
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .card-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .card-form h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        /* Стилизация Django-формы */
+        .card-form p { margin-bottom: 15px; }
+        .card-form input[type="text"], 
+        .card-form input[type="number"],
+        .card-form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover { background: #1a5c45; }
+
+        /* --- Footer --- */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        /* --- Media Queries --- */
+        @media (max-width: 768px) {
+            header { flex-direction: column; text-align: center; }
+            .nav-menu { justify-content: center; }
+            .header-controls { flex-direction: column; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-section">
+        <h1 style="font-size: 20px; margin: 0;">Складской учет</h1>
+    </div>
+
+    <nav class="nav-menu">
+        <a href="/user/" class="btn-nav">Пользователи</a>
+        <a href="/incoming/create/" class="btn-nav">Приходы</a>
+        <a href="/outcoming/create/" class="btn-nav">Расходы</a>
+        <a href="/branch/create/" class="btn-nav">Филиалы</a>
+        <a href="/branch_access/create/" class="btn-nav">
+          Доступ к филиалам</a>
+        <a href="/storage/create/" class="btn-nav">Склады</a>
+        <a href="{% url 'home' %}" class="btn-nav">Главная</a>
+    </nav>
+
+    <div class="header-controls">
+        <form class="search-box" action="{% url 'branch_access_search' %}" method="get">
+            <input name="q" type="text" placeholder="Поиск филиала...">
+            <button type="submit" style="border:none; background:none; cursor:pointer;">🔍</button>
+        </form>
+
+        {% if user.is_authenticated %}
+        <div class="user-profile">
+            <strong>👤 {{ user.username }}</strong>
+            <div class="user-dropdown">
+                <p><strong>{{ user.get_full_name }}</strong></p>
+                <p><small>{{ user.pos.pname }}</small></p>
+                <hr>
+                <a href="{% url 'logout' %}" style="color: red; text-decoration: none;">Выйти</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</header>
+
+<main class="main-container">
+    <section class="card-form">
+        <h2>Добавить запись</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="submit-btn">Добавить в базу</button>
+        </form>
+    </section>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Склад </title>
+    <style>
+        :root {
+            --primary-color: #0e3b2c;
+            --secondary-color: #9CC9BA;
+            --bg-dark: #2a2a2a;
+            --text-light: #ffffff;
+            --card-bg: #EEFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Шапка */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            height: 70px;
+            background: linear-gradient(to top, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .header-logo {
+            height: 40px;
+            border-radius: 4px;
+        }
+
+        /* Выпадающее меню пользователя */
+        nav ul {
+            list-style: none;
+            position: relative;
+        }
+
+        .nav-user {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .nav-user:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        nav ul ul {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            color: #333;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            z-index: 100;
+            padding: 10px;
+        }
+
+        nav ul li:hover > ul {
+            display: block;
+        }
+
+        nav ul ul li {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+
+        /* Основной контент */
+        .main-container {
+            flex: 1;
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .card-header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .card-body {
+            padding: 30px;
+            display: grid;
+            /* Сетка: кнопки будут перестраиваться сами */
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            background-color: var(--card-bg);
+        }
+
+        /* Кнопки */
+        .btn-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 15px 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: transform 0.2s, background 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-link:hover {
+            background-color: #1a5c46;
+            transform: translateY(-2px);
+        }
+
+        /* Футер */
+        footer {
+            background-color: #1a3d32;
+            padding: 20px 5%;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        /* Адаптивность для мобилок */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                height: auto;
+                padding: 15px;
+                gap: 10px;
+            }
+            .main-container {
+                width: 95%;
+                margin: 20px auto;
+            }
+            .card-body {
+                grid-template-columns: 1fr 1fr; /* По 2 кнопки в ряд */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-body {
+                grid-template-columns: 1fr; /* По 1 кнопке в ряд */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Склад</div>        
+        {% if user.is_authenticated %}
+        <nav>
+            <ul>
+                <li>
+                    <a class="nav-user" href="#">👤 {{user.username}}</a>
+                    <ul>
+                        <li><strong>{{user.first_name}} {{user.last_name}}</strong></li>
+                        <li>Должность: {{user.pos.pname}}</li>
+                        <li>Тел: {{user.tel}}</li>
+                        <li><a href="{% url 'logout' %}" style="color: red; text-decoration: none; font-weight: bold;">Выйти</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        {% endif %}
+    </header>
+
+    <div class="main-container">
+        <div class="card">
+            <div class="card-header">Панель управления</div>
+            <div class="card-body">
+                <a href="/user/" class="btn-link">Пользователи</a>
+                <a href="/incoming/" class="btn-link">Приходы</a>
+                <a href="/outcoming/" class="btn-link">Расходы</a>
+                <a href="/branch/" class="btn-link">Филиалы</a>
+                <a href="/branch_access/" class="btn-link">Доступ к филиалам</a>
+                <a href="/reestr/" class="btn-link">Отчёт</a>
+                <a href="/storage/" class="btn-link">Склады</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Аслиддин Набиев<br>
+        Тел.: +992 200 94 91 91
+    </footer>
+
+</body>
+</html>

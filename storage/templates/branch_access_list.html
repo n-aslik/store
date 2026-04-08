@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Склад</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #0e3b2c;
+            --accent-color: #9CC9BA;
+            --bg-dark: #2a2a2a;
+            --text-light: #ffffff;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6; /* Светлый фон для контента лучше читается */
+            color: #333;
+        }
+
+        /* Шапка сайта */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            padding: 1rem 2rem;
+            display: flex;
+            flex-wrap: wrap; /* Чтобы кнопки переносились на мобильных */
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 8px 16px;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn:hover {
+            background: white;
+            color: var(--primary-color) !important;
+        }
+
+        .btn a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Поиск */
+        .search-container input {
+            padding: 8px 12px;
+            border-radius: 4px 0 0 4px;
+            border: none;
+            outline: none;
+        }
+
+        .search-container button {
+            padding: 8px 15px;
+            border-radius: 0 4px 4px 0;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Таблица */
+        .table-wrapper {
+            margin: 20px;
+            overflow-x: auto; /* Скролл для мобильных */
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .action-link {
+            text-decoration: none;
+            color: #2980b9;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .delete-link {
+            color: #c0392b;
+        }
+
+        /* Адаптивность для мобильных */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .nav-buttons {
+                justify-content: center;
+            }
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="nav-buttons">
+        <a href="/user/" class="btn">Пользователи</a>
+        <a href="/incoming/create/" class="btn">Приходы</a>
+        <a href="/outcoming/create/" class="btn">Расходы</a>
+        <a href="/branch/create/" class="btn">Филиалы</a>
+        <a href="/branch_access/create/" class="btn">
+          Доступ к филиалам</a>
+        <a href="/storage/create/" class="btn">Склады</a>
+        <a href="{% url 'home' %}" class="btn" style="background: var(--primary-color);">Главная</a>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <h2 style="color: white; margin: 0;">Склад</h2>
+    </div>
+
+    <div class="search-container">
+        <form action="{% url 'branch_access_search' %}" method="get" style="display: flex;">
+            <input name="q" type="text" placeholder="Поиск...">
+            <button type="submit" style="border:none; background:none; cursor:pointer;">🔍</button>
+        </form>
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="user-info" style="color: white; font-size: 14px;">
+        <strong>👤 {{user.username}}</strong> | <a href="{% url 'logout' %}" style="color: #ff9f9f;">Выход</a>
+    </div>
+    {% endif %}
+</header>
+
+<main style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Пользователь</th>
+                    <th>Организация</th>
+                    <th>Склад</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item5 in data5 %}
+                <tr>
+                    <td>{{item5.user.fio}}</td>
+                    <td>{{item5.branch.bname}}</td>
+                    <td>{{item5.store.sname}}</td>
+                    <td>
+                        <a href="{% url 'branch_access_update' item5.id %}" class="action-link">Изменить</a>
+                        <span style="color: #ccc;">|</span>
+                        <a href="{% url 'branch_access_delete' item5.id %}" class="action-link delete-link">Удалить</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+
+
+</body>
+</html>
