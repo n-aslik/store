@@ -53,7 +53,7 @@ MIDDLEWARE = [
     
 ]
 
-ROOT_URLCONF = 'bankstorage.urls'
+ROOT_URLCONF = 'storages.urls'
 
 
 TEMPLATES = [
@@ -74,7 +74,7 @@ TEMPLATES = [
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-WSGI_APPLICATION = 'bankstorage.wsgi.application'
+WSGI_APPLICATION = 'storages.wsgi.application'
 
 
 # Database
