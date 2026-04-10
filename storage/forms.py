@@ -20,13 +20,30 @@ class userpageform(forms.ModelForm):
 class incomingform(forms.ModelForm):
     class Meta:        
         model=Incoming
-        fields=['user','iname','counti','recipient','incoming_date','store']
+        fields=['user','iname','counti','recipient','incoming_date','store','unit', 'price', 'total_price']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Делаем поле необязательным, чтобы форма не ругалась на пустоту
+        if 'total_price' in self.fields:
+            self.fields['total_price'].required = False
+            # Можно даже запретить его редактировать, так как считаем сами
+            self.fields['total_price'].widget.attrs['readonly'] = True
         
 
 class outcomingform(forms.ModelForm):
     class Meta:        
         model=Outcoming
-        fields=['user','inc','counto','recipient','outcoming_date','store']
+        fields=['user','inc','counto','recipient','outcoming_date','store','unit', 'price', 'total_price']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Делаем поле необязательным, чтобы форма не ругалась на пустоту
+        if 'total_price' in self.fields:
+            self.fields['total_price'].required = False
+            # Можно даже запретить его редактировать, так как считаем сами
+            self.fields['total_price'].widget.attrs['readonly'] = True
+        
         
 class storeform(forms.ModelForm):
     class Meta:

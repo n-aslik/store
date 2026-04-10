@@ -226,7 +226,21 @@
         </form>
     </section>
 </main>
+<script>
+    // Ждем загрузки страницы
+    document.addEventListener('input', function (e) {
+        // Проверяем, что меняются поля цены или количества
+        // Django обычно дает ID id_price и id_counti
+        const price = document.getElementById('id_price');
+        const count = document.getElementById('id_counti');
+        const total = document.getElementById('id_total_price');
 
+        if (price && count && total) {
+            const sum = parseFloat(price.value || 0) * parseFloat(count.value || 0);
+            total.value = sum.toFixed(2);
+        }
+    });
+</script>
 
 </body>
 </html>

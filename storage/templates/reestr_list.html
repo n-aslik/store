@@ -239,6 +239,9 @@
                         <th>Склад</th>
                         <th>Получатель</th>
                         <th>Количество</th>
+                        <th>Единица изм.</th>
+                        <th>Цена</th>
+                        <th>Итоговая Цена</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -249,8 +252,11 @@
                         <td>{{ i.iname }}</td>
                         <td>{{ i.store.branch.bname }}</td>
                         <td>{{ i.store.sname}}</td>
-                        <td>{{ i.Recipient }}</td>
-                        <td>{{ i.Counti }}</td>
+                        <td>{{ i.recipient }}</td>
+                        <td>{{ i.counti }}</td>
+                        <td>{{ i.unit.uname }}</td>
+                        <td>{{ i.price }} </td>
+                        <td>{{ i.total_price }} </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -268,6 +274,9 @@
                         <th>Склад</th>
                         <th>Получатель</th>
                         <th>Количество</th>
+                        <th>Единица изм.</th>
+                        <th>Цена</th>
+                        <th>Итоговая Цена</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -278,8 +287,11 @@
                         <td>{{ o.inc.iname }}</td>
                         <td>{{ o.store.branch.bname }}</td>
                         <td>{{ o.store.sname}}</td>
-                        <td>{{ o.Recipient }}</td>
-                        <td>{{ o.Counto }}</td>
+                        <td>{{ o.recipient }}</td>
+                        <td>{{ o.counto }}</td>
+                        <td>{{ o.unit.uname }}</td>
+                        <td>{{ o.price }} </td>
+                        <td>{{ o.total_price }} </td>
                     </tr>
                     {% endfor %}
                 </tbody>

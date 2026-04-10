@@ -10,10 +10,14 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.db import connection
 from django.contrib import messages
 
-#User#
+#region User
 def user_list (request):
-    data1=Userlogin.objects.all()
-    return render(request,'user_list.html',{'data1':data1})
+    if request.user.rol == 'admin' or request.user.rol == 'ch.accountant':
+         messages.warning(request,"У вас нет доступа")
+         return render(request, 'home.html', {'message':"У вас нет доступа"})
+    else:
+        data1=Userlogin.objects.all().order_by('rol')
+        return render(request,'user_list.html',{'data1':data1})
 
 def user_update(request,id):
     users=Userlogin.objects.all()
@@ -75,7 +79,7 @@ WHERE so.inc_id = si.id
 
 
 
-#Incoming#
+#region Incoming
 def incoming_list (request):
     my_custom_update1()
     if request.user.rol in [1,2] or request.user.is_superuser==1:
@@ -94,10 +98,14 @@ def incoming_create(request):
     if request.method=='POST':
         form=incomingform(request.POST )
         if form.is_valid():
-            if form.instance.counti<0:
+            counti = form.cleaned_data.get('counti')
+            price = form.cleaned_data.get('price')
+            if form.instance.counti<0 :
                 pass
             else:
-                form.save()
+                instance = form.save(commit=False)
+                instance.total_price = price * counti
+                instance.save()
                 return redirect('incoming_list')
     else:
         form=incomingform()
@@ -122,7 +130,9 @@ def incoming_update(request,id):
     form=incomingform(request.POST, instance=income)
     if request.method=="POST":
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            instance.total_price = instance.price * instance.counti
+            instance.save()
             return redirect('incoming_list')
     else:
         initial_data1={
@@ -131,7 +141,10 @@ def incoming_update(request,id):
             'incoming_date':income.incoming_date,
             'recipient':income.recipient,
             'store':income.store,
-            'user':income.user
+            'user':income.user,
+            'unit':income.unit,
+            'price':income.price,
+            'total_price': income.total_price
 
             }
     form=incomingform(initial=initial_data1)
@@ -157,7 +170,7 @@ def incoming_delete(request,id):
     return redirect('incoming_list')
 ##########################################################
 
-#Outcoming#
+#region Outcoming
 
 def outcoming_list (request):
     my_custom_update2()
@@ -176,10 +189,14 @@ def outcoming_create(request):
     if request.method=='POST':
         form=outcomingform(request.POST )
         if form.is_valid():
+            counto = form.cleaned_data.get('counto')
+            price = form.cleaned_data.get('price')
             if form.instance.counto<0:
                 pass
             else:
-                form.save()
+                instance = form.save(commit=False)
+                instance.total_price = price * counto
+                instance.save()
                 return redirect('outcoming_list')
     else:
         form=outcomingform()
@@ -209,7 +226,9 @@ def outcoming_update(request,id):
     form=outcomingform(request.POST , instance=outcome)
     if request.method=='POST':
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            instance.total_price = instance.price * instance.counto
+            instance.save()
             return redirect('outcoming_list')
     else:
         initial_data2={
@@ -218,7 +237,10 @@ def outcoming_update(request,id):
         'recipient':outcome.recipient,
         'outcoming_date':outcome.outcoming_date,
         'store':outcome.store,
-        'user':outcome.user
+        'user':outcome.user,
+        'unit':outcome.unit,
+        'price':outcome.price,
+        'total_price': outcome.total_price
         
             }
     form=outcomingform(initial=initial_data2)
@@ -247,7 +269,7 @@ def outcoming_delete(request,id):
 ##########################################################
 
     
-#Storage#
+#region Storage
 def storage_list (request):
     if request.user.rol in [1,2] or request.user.is_superuser==1:
         if  request.user.id>1:
@@ -339,7 +361,7 @@ def storage_delete(request,id):
     return redirect('storage_list')
 
 #########################################################################################
-#Branch#
+#region Branch
 def branch_list (request):
     if request.user.rol in [1,2] or request.user.is_superuser==1:
         if  request.user.id>1:
@@ -420,7 +442,7 @@ def branch_delete(request,id):
     return redirect('branch_list')
 
 ##########################################################
-#Branch_access#
+#region Branch_access
 def branch_access_list (request):
     if request.user.rol in [1,2] or request.user.is_superuser==1:
         if  request.user.id > 1:
@@ -433,7 +455,6 @@ def branch_access_list (request):
         data5=Branch_access.objects.filter(user=request.user)
         return render(request,'branch_access_list.html',{'data5':data5})
     
-# @permission_required('storage.can_view_page')
 def branch_access_create(request):
     if request.method=='POST':
         form=branch_accessform(request.POST)
@@ -505,7 +526,7 @@ def branch_access_delete(request,id):
     instance.delete()
     return redirect('branch_access_list')
 ##############################################################
-#HOME#
+#region HOME
 @login_required(login_url='')
 def home (request):
     user = request.user
@@ -570,7 +591,7 @@ def reestr(request):
 
         
 ##########################################################################################################################################################################
-#SEARCH_DATA#
+#region SEARCH_DATA
 class UserSearchResultsView(ListView):
     model = Userlogin
     template_name = 'user_search.html'

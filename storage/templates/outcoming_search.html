@@ -175,19 +175,25 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Пользователь</th>
                         <th>Наименование</th>
             	        <th>Количество</th>
             	        <th>Получатель</th>
                         <th>Склад</th>
+                        <th>Единица изм.</th>
+                        <th>Цена</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for data3 in object_list %}
                     <tr>
+                        <td>{{ data3.user.fio }}</td>
                         <td>{{ data3.inc.iname }}</td>
             	        <td>{{ data3.counto}}</td>
             	        <td>{{ data3.recipient }}</td>
                         <td>{{ data3.store.sname }}</td>
+                        <td>{{ item3.unit.uname }}</td>
+                        <td>{{ item3.price }} </td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -46,11 +46,14 @@ class Storage(models.Model):
     
 class Incoming(models.Model):
     iname=models.CharField("Наименование",max_length=45)
-    counti=models.IntegerField("количество")
+    counti=models.IntegerField("Количество")
     incoming_date=models.DateField("Дата прихода")
-    recipient=models.CharField("получатель",max_length=50)
+    recipient=models.CharField("Получатель",max_length=50)
     store=models.ForeignKey("Storage",verbose_name="Склад",on_delete=models.CASCADE,null=True, blank=True)
     user=models.ForeignKey("Userlogin",verbose_name='Пользователь',on_delete=models.CASCADE)
+    unit =models.ForeignKey("Unit", verbose_name="Единица", on_delete=models.CASCADE)
+    price = models.FloatField("Цена")
+    total_price = models.FloatField("Общая цена")
     
     def __str__(self):
         if self.counti<=0:
@@ -65,6 +68,14 @@ class Outcoming(models.Model):
     store=models.ForeignKey("Storage",verbose_name="Склад",on_delete=models.CASCADE,null=True, blank=True)
     outcoming_date=models.DateField("Дата расхода")
     user=models.ForeignKey("Userlogin",verbose_name='Пользователь',on_delete=models.CASCADE)
+    unit =models.ForeignKey("Unit", verbose_name="Единица", on_delete=models.CASCADE)
+    price = models.FloatField("Цена")
+    total_price = models.FloatField("Общая цена")
+
+
+    
+
+
     
 class Branch_access(models.Model):
     branch=models.ForeignKey("Branch",verbose_name="Филиал",on_delete=models.CASCADE,null=True, blank=True)
@@ -81,6 +92,12 @@ class Position(models.Model):
 
     def __str__(self):
         return self.pname
+    
+class Unit(models.Model):
+    uname  = models.CharField("Единица изм.", max_length=50)
+
+    def __str__(self):
+        return self.uname
 
     
 

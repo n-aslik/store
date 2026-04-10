@@ -182,20 +182,26 @@
         <table>
             <thead>
                 <tr>
+                    <th>Пользователь</th>
                     <th>Наименование</th>
                     <th>Количество</th>
                     <th>Дата прихода</th>
                     <th>Наименование склада</th>
+                    <th>Единица изм.</th>
+                    <th>Цена</th>
                     <th>Действие</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item2 in data2 %}
                 <tr>
+                    <td>{{ item2.user.fio }}</td>
                     <td>{{ item2.iname }}</td>
                     <td>{{ item2.counti}}</td>
                     <td>{{ item2.incoming_date }}</td>
                     <td>{{ item2.store.sname }}</td>
+                    <td>{{ item2.unit.uname }}</td>
+                    <td>{{ item2.price }} </td>
                     <td>
                         <a href="{% url 'incoming_update' item2.id %}" class="action-link">Изменить</a>
                         <span style="color: #ccc;">|</span>

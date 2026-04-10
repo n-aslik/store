@@ -174,19 +174,25 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Пользователь</th>
                         <th>Наименование</th>
             	        <th>Количество</th>
             	        <th>Дата прихода</th>
             	        <th>Наименование склада</th>
+                        <th>Единица изм.</th>
+                        <th>Цена</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for data2 in object_list %}
                     <tr>
+                        <td>{{ data2.user.fio }}</td>
                         <td>{{ data2.iname }}</td>
             	        <td>{{ data2.counti}}</td>
             	        <td>{{ data2.incoming_date }}</td>
             	        <td>{{ data2.store.sname }}</td>
+                        <td>{{ item2.unit.uname }}</td>
+                        <td>{{ item2.price }} </td>
                     </tr>
                     {% endfor %}
                 </tbody>

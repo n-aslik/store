@@ -182,11 +182,14 @@
         <table>
             <thead>
                 <tr>
+                    <th>Пользователь</th>
                     <th>Наименование</th>
                     <th>Количество</th>
                     <th>Получатель</th>
                     <th>Дата расхода</th>
                     <th>Склад</th>
+                    <th>Единица изм.</th>
+                    <th>Цена</th>
                     <th>Действие</th>
                 </tr>
             </thead>
@@ -212,11 +215,14 @@
     </center>
     {% else %}
         <tr>
+            <td>{{ item3.user.fio }}</td>
             <td>{{ item3.inc.iname }}</td>
             <td>{{ item3.counto }}</td>
             <td>{{ item3.recipient }}</td>
             <td>{{ item3.outcoming_date }}</td>
             <td>{{ item3.store.sname }}</td>
+            <td>{{ item3.unit.uname }}</td>
+            <td>{{ item3.price }} </td>
                     <td>
                         <a href="{% url 'outcoming_update' item3.id %}" class="action-link">Изменить</a>
                         <span style="color: #ccc;">|</span>

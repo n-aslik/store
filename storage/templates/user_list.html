@@ -193,6 +193,7 @@
             </thead>
             <tbody>
                 {% for item1 in data1 %}
+                {% if not  message %}
                 <tr>
                     <td>{{ item1.fio }}</td>
                     <td>{{ item1.pos.pname}}</td>
@@ -206,6 +207,10 @@
                         <a href="{% url 'user_delete' item1.id %}" class="action-link delete-link">Удалить</a>
                     </td>
                 </tr>
+                {% else %}
+                    <div class="message-box">{{ message }}</div>
+                    <a href="{% url 'home'}" class="back-link">← Вернуться назад</a>
+                {% endif %}
                 {% endfor %}
             </tbody>
         </table>
